@@ -546,7 +546,7 @@ server.listen(11111,function () {
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ DB 관련 start @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 //##################### DB 연결 ########################
-mongoose.connect("mongodb://test:test@ds023664.mlab.com:23664/roadtest");
+mongoose.connect("mongodb://172.31.11.180:27017");
 var db = mongoose.connection;
 db.once("open",function () {
   console.log("DB connected");
@@ -1153,7 +1153,7 @@ beaconData.find({}).limit(20).sort({$natural:-1}).exec(function (err,rcdata) {
 
 
 
-http.listen(3000,function(){
-    console.log('listening at 3000');
+http.listen(80,function(){
+    console.log('listening at 80');
 
 });
