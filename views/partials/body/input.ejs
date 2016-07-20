@@ -34,7 +34,7 @@ var test1 =false;
   }
 
   socket.on('luck1',function () {
-    console.log('2');
+    console.log('1');
     test1=true;
 
     if(test1){
@@ -67,6 +67,7 @@ var test1 =false;
     //var dao = "<%=data_1.range001%>"
   socket.on('email1',function () {
       socket.emit('standardData');
+	socket.disconnect();
   })
   $('#std1').click(function () {
       ruleform1.submit();
@@ -126,6 +127,7 @@ var test1 =false;
           //var dao = "<%=data_1.range001%>"
           socket.on('email2',function () {
               socket.emit('standardData');
+	      socket.disconnect();
           })
           $('#std2').click(function () {
               ruleform2.submit();
@@ -184,6 +186,7 @@ var test1 =false;
             //var dao = "<%=data_1.range001%>"
             socket.on('email3',function () {
                 socket.emit('standardData');
+		socket.disconnect();
             })
             $('#std3').click(function () {
                 ruleform3.submit();
@@ -242,7 +245,8 @@ var test1 =false;
           var socket = io.connect("http://52.78.82.199:80");
             //var dao = "<%=data_1.range001%>"
             socket.on('email4',function () {
-                socket.emit('standardData');
+                socket.emit('standaradData');
+		socket.disconnect();
             })
             $('#std4').click(function () {
                 ruleform4.submit();
@@ -301,6 +305,7 @@ var test1 =false;
               //var dao = "<%=data_1.range001%>"
               socket.on('email5',function () {
                   socket.emit('standardData');
+		  socket.disconnect();
               })
               $('#std5').click(function () {
                   ruleform5.submit();

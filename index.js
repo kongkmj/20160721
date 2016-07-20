@@ -34,7 +34,8 @@ var rcinterval ; // 디바이스로 부터 받은 주기
 
 var reccount=0;
 var fuck1,fuck2,fuck3,fuck4,fuck5;
-
+var suck1,suck2,suck3,suck4,suck5;
+var duck1,duck2,duck3,duck4,duck5;
 
 var dbprevData = new Array(20); //역순으로 데이터를 찾기에 순서를 바꿔줄 그릇
 
@@ -45,16 +46,12 @@ var net = require('net');
 var server = net.createServer(function (socket2) {
 
 
-
-
-
-
     //웹에서 주기버튼 눌렀을시
   io.on('connection',function (socket) {
     socket.on('intervalEV',function (message) {
       intervalmessage=message;
-
-      socket2.write("a"+rangedata[0]+","+rangedata[1]+","+rangedata[2]+","+rangedata[3]+","+rangedata[4]+","+message+"b");
+	//console.log("!!");
+      socket2.write("a"+rangedata[0]+"x"+rangedata[1]+"x"+rangedata[2]+"x"+rangedata[3]+"x"+rangedata[4]+"x"+message+"b");
     });
 
 
@@ -63,28 +60,45 @@ var server = net.createServer(function (socket2) {
 
 
    io.on('connection',function (socket) {
+	suck1,suck2,suck3,suck4,suck5=0;
+
     socket.on('standardData',function () {
-      socket2.write("a"+rangedata[0]+","+rangedata[1]+","+rangedata[2]+","+rangedata[3]+","+rangedata[4]+","+intervalmessage+"b");
+	//console.log("@@");
+      socket2.write("a"+rangedata[0]+"x"+rangedata[1]+"x"+rangedata[2]+"x"+rangedata[3]+"x"+rangedata[4]+"x"+intervalmessage+"b");
+	socket.disconnect();
     });
+	
     socket.on('std1',function () {
         socket2.write('std');
         fuck1=1;
+	suck1=1;
+	duck1=1;
+	socket.disconnect();
     });
     socket.on('std2',function () {
         socket2.write('std');
         fuck2=1;
+	suck2=1;
+	duck2=1;
+	socket.disconnect();
     });
     socket.on('std3',function () {
         socket2.write('std');
         fuck3=1;
+	suck3=1;
+  	duck3=1;
     });
     socket.on('std4',function () {
         socket2.write('std');
         fuck4=1;
+	suck4=1;
+	duck4=1;
     });
     socket.on('std5',function () {
         socket2.write('std');
         fuck5=1;
+	suck5=1;
+	duck5=1;
     });
 
 
@@ -157,8 +171,14 @@ rcrule[2] = d006;
 rcrule[3] = d008;
 rcrule[4] = d010;
 
+console.log(d011.length);
+if(d011.length!=3){
+  socket2.write("xx");
+}
+
 //주기
 rcinterval = d011;
+
 
 // 수신 데이터 최대치 조정
 
@@ -181,7 +201,6 @@ rcinterval = d011;
   });
 
 
-
 if(data){
 
 
@@ -195,6 +214,7 @@ if(data){
     log1.save(function (err,log1) {
     });
     io.emit('luck1');
+	fuck1=0;
   }
   if(fuck2==1){
     var stnum2=1*rcrule[1];
@@ -206,6 +226,7 @@ if(data){
     log2.save(function (err,log2) {
     });
     io.emit('luck2');
+	fuck2=0;
   }
   if(fuck3==1){
     var stnum3=1*rcrule[2];
@@ -217,6 +238,7 @@ if(data){
     log3.save(function (err,log3) {
     });
     io.emit('luck3');
+	fuck3=0;
   }
   if(fuck4==1){
     var stnum4=1*rcrule[3];
@@ -228,6 +250,7 @@ if(data){
     log4.save(function (err,log4) {
     });
     io.emit('luck4');
+	fuck4=0;
   }
   if(fuck5==1){
     var stnum5=1*rcrule[4];
@@ -239,16 +262,18 @@ if(data){
     log5.save(function (err,log5) {
     });
     io.emit('luck5');
+	fuck5=0;
   }
 
 
 //디바이스에서 보낸 데이터(주기,민감도)가 다를 경우
 if(rcrule[0]!=rangedata[0]||rcrule[1]!=rangedata[1]||rcrule[2]!=rangedata[2]||rcrule[3]!=rangedata[3]||rcrule[4]!=rangedata[4]||rcinterval!=intervalmessage){
-
-  socket2.write("a"+rangedata[0]+","+rangedata[1]+","+rangedata[2]+","+rangedata[3]+","+rangedata[4]+","+intervalmessage+"b");
+  
+  socket2.write("a"+rangedata[0]+"x"+rangedata[1]+"x"+rangedata[2]+"x"+rangedata[3]+"x"+rangedata[4]+"x"+intervalmessage+"b");
   }
 
-/* test용 디바이스에서 보낸데이터 비교
+ //test용 디바이스에서 보낸데이터 비교
+/*
 if(rcrule[0]!=rangedata[0]){
   console.log("1");
 }
@@ -483,6 +508,7 @@ io.emit('chat message',parsingdata,alaram);
 
 //test
 io.emit('chat message',parsingdata,alaram,recieveArray);
+console.log(recieveArray);
   });
 
 
@@ -689,9 +715,13 @@ app.get('/input',function (req,res) {
 
 // (1)
 app.post('/input1',function (req,res) {
-
+  console.log("this is "+duck1); 
+  if(duck1==1){
     ruledata[0]=data_001;
-
+  }
+  if(duck1!=1){
+    ruledata[0]=rule_001.rule001;
+  }
   if(req.body.range1==undefined){
     rangedata[0]= rule_001.range001;
   }
@@ -713,15 +743,23 @@ app.post('/input1',function (req,res) {
   if(rangedata[0]>=10&&rangedata[0]<100){
     rangedata[0]="0"+rangedata[0];
   }
-
+  if(suck1!=1){
   io.emit('email1');
+	}
+  duck1=0;
   res.redirect('/input');
 });
 
 // (2)
 app.post('/input2',function (req,res) {
-
+  console.log("2 this is "+duck2);  
+  
+  if(duck2==1){
     ruledata[1]=data_002;
+  }
+  if(duck2!=1){
+  ruledata[1]=rule_002.rule002; 
+}
   if(req.body.range2==undefined){
     rangedata[1]= rule_002.range002;
   }
@@ -744,15 +782,21 @@ app.post('/input2',function (req,res) {
     rangedata[1]="0"+rangedata[1];
   }
 
+  if(suck2!=1){
   io.emit('email2');
+	}
+  duck2=0;
   res.redirect('/input');
 });
 
 // (3)
 app.post('/input3',function (req,res) {
-
+  if(duck3==1){
     ruledata[2]=data_003;
-
+  }
+  if(duck3!=1){
+    ruledata[2]=rule_003.rule003;
+  }
   if(req.body.range3==undefined){
     rangedata[2]= rule_003.range003;
   }
@@ -775,14 +819,20 @@ app.post('/input3',function (req,res) {
     rangedata[2]="0"+rangedata[2];
   }
 
+  if(suck3!=1){
   io.emit('email3');
+  }
+  duck3=0;
   res.redirect('/input');
 });
 // (4)
 app.post('/input4',function (req,res) {
-
+  if(duck4==1){
     ruledata[3]=data_004;
-
+  }
+  if(duck4!=1){
+    ruledata[3]=rule_004.rule004;
+  }
   if(req.body.range4==undefined){
     rangedata[3]= rule_004.range004;
   }
@@ -805,15 +855,22 @@ app.post('/input4',function (req,res) {
     rangedata[3]="0"+rangedata[3];
   }
 
+  if(suck4!=1){
   io.emit('email4');
+	}
+  duck4=0;
   res.redirect('/input');
 });
 
 // (5)
 app.post('/input5',function (req,res) {
+  if(duck5==1){
 
     ruledata[4]=data_005;
-
+  }
+  if(duck5!=1){
+  ruledata[4]= rule_005.rule005;
+  }
   if(req.body.range5==undefined){
     rangedata[4]= rule_005.range005;
   }
@@ -836,7 +893,11 @@ app.post('/input5',function (req,res) {
     rangedata[4]="0"+rangedata[4];
   }
 
+  if(suck5!=1){
+
   io.emit('email5');
+}
+  duck5=0;
   res.redirect('/input');
 });
 
